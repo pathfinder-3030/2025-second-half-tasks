@@ -68,6 +68,29 @@ function getWeatherInfo(code: number): WeatherCodeInfo {
 }
 
 /**
+ * OpenMeteoResponseをSimplifiedWeatherDataに変換
+ */
+function transformToSimplifiedData(
+  weatherData: OpenMeteoResponse,
+  cityName: string,
+  country: string
+): SimplifiedWeatherData {
+  const weatherInfo = getWeatherInfo(weatherData.current.weather_code);
+
+  return {
+    cityName,
+    country,
+    temperature: Math.round(weatherData.current.temperature_2m),
+    feelsLike: Math.round(weatherData.current.apparent_temperature),
+    description: weatherInfo.description,
+    icon: weatherInfo.icon,
+    humidity: weatherData.current.relative_humidity_2m,
+    windSpeed: Math.round(weatherData.current.wind_speed_10m * 10) / 10,
+    timestamp: Math.floor(new Date(weatherData.current.time).getTime() / 1000),
+  };
+}
+
+/**
  * 都市名から座標を取得 (Geocoding API)
  */
 async function geocodeCity(cityName: string): Promise<GeocodingResult> {
@@ -188,19 +211,11 @@ export async function getWeatherByCity(
   );
 
   // 3. データを変換して返す
-  const weatherInfo = getWeatherInfo(weatherData.current.weather_code);
-
-  return {
-    cityName: location.name,
-    country: location.country_code,
-    temperature: Math.round(weatherData.current.temperature_2m),
-    feelsLike: Math.round(weatherData.current.apparent_temperature),
-    description: weatherInfo.description,
-    icon: weatherInfo.icon,
-    humidity: weatherData.current.relative_humidity_2m,
-    windSpeed: Math.round(weatherData.current.wind_speed_10m * 10) / 10,
-    timestamp: Math.floor(new Date(weatherData.current.time).getTime() / 1000),
-  };
+  return transformToSimplifiedData(
+    weatherData,
+    location.name,
+    location.country_code
+  );
 }
 
 /**
@@ -256,17 +271,9 @@ export async function getWeatherByCoordinates(
   const weatherData = await fetchWeatherByCoordinates(lat, lon);
 
   // 逆ジオコーディングは行わず、座標を都市名として使用
-  const weatherInfo = getWeatherInfo(weatherData.current.weather_code);
-
-  return {
-    cityName: `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
-    country: "",
-    temperature: Math.round(weatherData.current.temperature_2m),
-    feelsLike: Math.round(weatherData.current.apparent_temperature),
-    description: weatherInfo.description,
-    icon: weatherInfo.icon,
-    humidity: weatherData.current.relative_humidity_2m,
-    windSpeed: Math.round(weatherData.current.wind_speed_10m * 10) / 10,
-    timestamp: Math.floor(new Date(weatherData.current.time).getTime() / 1000),
-  };
+  return transformToSimplifiedData(
+    weatherData,
+    `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
+    ""
+  );
 }
