@@ -1,6 +1,6 @@
 # 天気予報ダッシュボード
 
-Next.js、TypeScript、Tailwind CSSを使用した天気予報ダッシュボードアプリケーション。OpenWeatherMap APIを利用して、複数都市の天気情報をリアルタイムで表示します。
+Next.js、TypeScript、Tailwind CSSを使用した天気予報ダッシュボードアプリケーション。Open-Meteo APIを利用して、複数都市の天気情報をリアルタイムで表示します。
 
 ## 学習目的
 
@@ -20,6 +20,31 @@ Next.js、TypeScript、Tailwind CSSを使用した天気予報ダッシュボー
    - TypeScript
    - Tailwind CSS
 
+## 使用API
+
+### Open-Meteo API
+
+このアプリケーションは [Open-Meteo](https://open-meteo.com/) の無料APIを使用しています。
+
+**特徴:**
+
+- **完全無料** (非商用利用)
+- **APIキー不要** - 登録なしですぐに使用可能
+- **日本語対応** - WMO Weather Codeを日本語にマッピング
+- **世界中の都市に対応**
+
+**利用制限 (無料プラン):**
+
+- 1分あたり: 600コール
+- 1時間あたり: 5,000コール
+- 1日あたり: 10,000コール
+- 1ヶ月あたり: 300,000コール
+
+**使用エンドポイント:**
+
+- Geocoding API: `https://geocoding-api.open-meteo.com/v1/search`
+- Weather API: `https://api.open-meteo.com/v1/forecast`
+
 ## 機能
 
 - 複数都市の天気情報の同時表示
@@ -37,13 +62,7 @@ Next.js、TypeScript、Tailwind CSSを使用した天気予報ダッシュボー
 - Node.js 18以上
 - npm または yarn
 
-### 2. OpenWeatherMap APIキーの取得
-
-1. [OpenWeatherMap](https://openweathermap.org/api) にアクセス
-2. アカウントを作成 (無料)
-3. API KeysセクションからAPIキーを取得
-
-### 3. インストール
+### 2. インストール
 
 ```bash
 # リポジトリをクローン (既存の場合はスキップ)
@@ -53,21 +72,7 @@ cd weather-dashboard
 npm install
 ```
 
-### 4. 環境変数の設定
-
-`.env.local.example` を `.env.local` にコピーして、APIキーを設定します:
-
-```bash
-cp .env.local.example .env.local
-```
-
-`.env.local` を編集:
-
-```env
-NEXT_PUBLIC_OPENWEATHER_API_KEY=your_actual_api_key_here
-```
-
-### 5. 開発サーバーの起動
+### 3. 開発サーバーの起動
 
 ```bash
 npm run dev
@@ -75,7 +80,9 @@ npm run dev
 
 ブラウザで [http://localhost:3000](http://localhost:3000) を開きます。
 
-### 6. ビルド
+**APIキーの設定は不要です！** Open-Meteo APIはAPIキーなしで利用できます。
+
+### 4. ビルド
 
 ```bash
 npm run build
@@ -98,7 +105,6 @@ weather-dashboard/
 │   └── weatherApi.ts         # API関連関数
 ├── types/
 │   └── weather.ts            # 型定義
-├── .env.local.example        # 環境変数の例
 ├── package.json
 ├── tsconfig.json
 └── tailwind.config.ts
@@ -108,13 +114,12 @@ weather-dashboard/
 
 ### APIレベルのエラーハンドリング
 
-1. **APIキー検証**
-   - APIキーが設定されていない場合のエラー
+1. **都市名検証**
+   - 都市名が空の場合のエラー
+   - 都市が見つからない場合のエラー
 
 2. **HTTPステータスコード別処理**
    - 404: 都市が見つからない
-   - 401: APIキーが無効
-   - 429: レート制限超過
    - その他: 一般的なエラー
 
 3. **ネットワークエラー**
@@ -146,9 +151,13 @@ export class WeatherApiError extends Error {
   // エラーコードとステータスコードを保持
 }
 
-// 都市名から天気情報を取得
+// 都市名から天気情報を取得 (2ステップ)
+// 1. Geocoding API で都市名 → 座標を取得
+// 2. Weather API で座標 → 天気情報を取得
 export async function getWeatherByCity(cityName: string) {
-  // バリデーション、フェッチ、エラーハンドリング
+  const location = await geocodeCity(cityName);
+  const weather = await fetchWeatherByCoordinates(location.latitude, location.longitude);
+  return transformWeatherData(weather, location);
 }
 ```
 
@@ -180,15 +189,34 @@ try {
 
 ## APIエンドポイント
 
-OpenWeatherMap API の使用エンドポイント:
+### Open-Meteo Geocoding API
 
-- `GET /weather`: 現在の天気情報取得
+都市名から座標を取得:
+
+```
+GET https://geocoding-api.open-meteo.com/v1/search
+```
 
 パラメータ:
-- `q`: 都市名
-- `appid`: APIキー
-- `units`: 単位 (metric = 摂氏)
-- `lang`: 言語 (ja = 日本語)
+
+- `name`: 都市名
+- `count`: 結果数 (デフォルト: 1)
+- `language`: 言語 (ja = 日本語)
+
+### Open-Meteo Weather API
+
+座標から天気情報を取得:
+
+```
+GET https://api.open-meteo.com/v1/forecast
+```
+
+パラメータ:
+
+- `latitude`: 緯度
+- `longitude`: 経度
+- `current`: 取得する現在の天気データ
+- `timezone`: タイムゾーン (auto = 自動)
 
 ## 今後の拡張案
 
@@ -202,14 +230,6 @@ OpenWeatherMap API の使用エンドポイント:
 
 ## トラブルシューティング
 
-### APIキーエラー
-
-```
-APIキーが設定されていません
-```
-
-→ `.env.local` ファイルが作成されているか、APIキーが正しく設定されているか確認してください。
-
 ### 都市が見つからない
 
 ```
@@ -218,13 +238,17 @@ APIキーが設定されていません
 
 → 英語の都市名を使用してください (例: Tokyo, London, Paris)
 
+### ネットワークエラー
+
+```
+ネットワークエラー: ...
+```
+
+→ インターネット接続を確認してください。
+
 ### レート制限
 
-```
-APIリクエストの制限に達しました
-```
-
-→ 無料プランは1分間に60リクエストまでです。しばらく待ってから再試行してください。
+Open-Meteo の無料プランには制限があります。大量のリクエストを行うと一時的にブロックされる場合があります。しばらく待ってから再試行してください。
 
 ## ライセンス
 
@@ -233,6 +257,7 @@ APIリクエストの制限に達しました
 ## 参考資料
 
 - [Next.js Documentation](https://nextjs.org/docs)
-- [OpenWeatherMap API Documentation](https://openweathermap.org/api)
+- [Open-Meteo API Documentation](https://open-meteo.com/en/docs)
+- [Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs)

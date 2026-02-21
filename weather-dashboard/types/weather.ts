@@ -1,59 +1,66 @@
-// OpenWeatherMap APIのレスポンス型定義
-
-export interface WeatherData {
-  coord: {
-    lon: number;
-    lat: number;
-  };
-  weather: Array<{
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }>;
-  base: string;
-  main: {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-    pressure: number;
-    humidity: number;
-    sea_level?: number;
-    grnd_level?: number;
-  };
-  visibility: number;
-  wind: {
-    speed: number;
-    deg: number;
-    gust?: number;
-  };
-  clouds: {
-    all: number;
-  };
-  dt: number;
-  sys: {
-    type?: number;
-    id?: number;
-    country: string;
-    sunrise: number;
-    sunset: number;
-  };
-  timezone: number;
+// Open-Meteo Geocoding APIのレスポンス型定義
+export type GeocodingResult = {
   id: number;
   name: string;
-  cod: number;
-}
+  latitude: number;
+  longitude: number;
+  elevation?: number;
+  feature_code?: string;
+  country_code: string;
+  country: string;
+  timezone: string;
+  population?: number;
+  admin1?: string;
+  admin2?: string;
+  admin3?: string;
+  admin4?: string;
+};
+
+export type GeocodingResponse = {
+  results?: GeocodingResult[];
+  generationtime_ms?: number;
+};
+
+// Open-Meteo Weather APIのレスポンス型定義
+export type OpenMeteoCurrentWeather = {
+  time: string;
+  interval: number;
+  temperature_2m: number;
+  relative_humidity_2m: number;
+  apparent_temperature: number;
+  weather_code: number;
+  wind_speed_10m: number;
+};
+
+export type OpenMeteoResponse = {
+  latitude: number;
+  longitude: number;
+  generationtime_ms: number;
+  utc_offset_seconds: number;
+  timezone: string;
+  timezone_abbreviation: string;
+  elevation: number;
+  current_units: {
+    time: string;
+    interval: string;
+    temperature_2m: string;
+    relative_humidity_2m: string;
+    apparent_temperature: string;
+    weather_code: string;
+    wind_speed_10m: string;
+  };
+  current: OpenMeteoCurrentWeather;
+};
 
 // エラー型定義
-export interface WeatherError {
+export type WeatherError = {
   message: string;
   code?: string;
   statusCode?: number;
-}
+};
 
 // アプリケーション用の簡略化された天気データ
-export interface SimplifiedWeatherData {
+export type SimplifiedWeatherData = {
   cityName: string;
   country: string;
   temperature: number;
@@ -63,4 +70,10 @@ export interface SimplifiedWeatherData {
   humidity: number;
   windSpeed: number;
   timestamp: number;
-}
+};
+
+// WMO Weather Codes マッピング用
+export type WeatherCodeInfo = {
+  description: string;
+  icon: string;
+};

@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { SimplifiedWeatherData } from "@/types/weather";
-import { getWeatherForMultipleCities, WeatherApiError } from "@/lib/weatherApi";
-import WeatherCard from "@/components/WeatherCard";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import ErrorMessage from "@/components/ErrorMessage";
+import { getWeatherForMultipleCities, WeatherApiError } from "@/lib/weather-api";
+import WeatherCard from "@/components/weather-card";
+import LoadingSpinner from "@/components/loading-spinner";
+import ErrorMessage from "@/components/error-message";
 
 // デフォルトの都市リスト
 const DEFAULT_CITIES = ["Tokyo", "Osaka", "Kyoto", "Fukuoka", "Sapporo"];
@@ -132,7 +132,7 @@ export default function Home() {
 
         {/* フッター */}
         <footer className="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>Powered by OpenWeatherMap API</p>
+          <p>Powered by Open-Meteo API</p>
           <p className="mt-2">
             学習目的のデモアプリケーション - Next.js + TypeScript + Tailwind CSS
           </p>
