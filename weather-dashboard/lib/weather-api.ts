@@ -160,7 +160,7 @@ async function fetchWeatherByCoordinates(
   lon: number
 ): Promise<OpenMeteoResponse> {
   try {
-    const url = `${WEATHER_API_URL}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
+    const url = `${WEATHER_API_URL}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto&wind_speed_unit=ms`;
 
     const response = await fetch(url, {
       cache: "no-store",
