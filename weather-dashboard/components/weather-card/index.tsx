@@ -1,12 +1,48 @@
 import { SimplifiedWeatherData } from "@/types/weather";
-import Image from "next/image";
+import {
+  Sun,
+  Cloud,
+  CloudSun,
+  CloudRain,
+  CloudDrizzle,
+  CloudSnow,
+  CloudFog,
+  CloudLightning,
+  Snowflake,
+  type LucideIcon,
+} from "lucide-react";
+
+const WEATHER_ICONS: Record<string, LucideIcon> = {
+  Sun,
+  Cloud,
+  CloudSun,
+  CloudRain,
+  CloudDrizzle,
+  CloudSnow,
+  CloudFog,
+  CloudLightning,
+  Snowflake,
+};
+
+const ICON_COLORS: Record<string, string> = {
+  Sun: "text-yellow-500",
+  Cloud: "text-gray-400",
+  CloudSun: "text-yellow-400",
+  CloudRain: "text-blue-500",
+  CloudDrizzle: "text-blue-400",
+  CloudSnow: "text-blue-300",
+  CloudFog: "text-gray-500",
+  CloudLightning: "text-purple-500",
+  Snowflake: "text-cyan-400",
+};
 
 interface WeatherCardProps {
   weather: SimplifiedWeatherData;
 }
 
 export default function WeatherCard({ weather }: WeatherCardProps) {
-  const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}@2x.png`;
+  const IconComponent = WEATHER_ICONS[weather.icon] || Sun;
+  const iconColor = ICON_COLORS[weather.icon] || "text-yellow-500";
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
@@ -19,14 +55,10 @@ export default function WeatherCard({ weather }: WeatherCardProps) {
             {weather.country}
           </p>
         </div>
-        <div className="relative w-20 h-20">
-          <Image
-            src={iconUrl}
-            alt={weather.description}
-            fill
-            sizes="80px"
-            className="object-contain"
-            unoptimized
+        <div className="w-20 h-20 flex items-center justify-center">
+          <IconComponent
+            className={`w-16 h-16 ${iconColor}`}
+            aria-label={weather.description}
           />
         </div>
       </div>

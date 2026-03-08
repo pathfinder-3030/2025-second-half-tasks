@@ -13,36 +13,37 @@ const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast";
 /**
  * WMO Weather Codes を日本語の説明とアイコンにマッピング
  * https://open-meteo.com/en/docs より
+ * アイコンはlucide-reactのアイコン名を使用
  */
 const WMO_WEATHER_CODES: Record<number, WeatherCodeInfo> = {
-  0: { description: "快晴", icon: "01d" },
-  1: { description: "晴れ", icon: "01d" },
-  2: { description: "一部曇り", icon: "02d" },
-  3: { description: "曇り", icon: "03d" },
-  45: { description: "霧", icon: "50d" },
-  48: { description: "霧氷", icon: "50d" },
-  51: { description: "弱い霧雨", icon: "09d" },
-  53: { description: "霧雨", icon: "09d" },
-  55: { description: "強い霧雨", icon: "09d" },
-  56: { description: "弱い着氷性霧雨", icon: "09d" },
-  57: { description: "強い着氷性霧雨", icon: "09d" },
-  61: { description: "弱い雨", icon: "10d" },
-  63: { description: "雨", icon: "10d" },
-  65: { description: "強い雨", icon: "10d" },
-  66: { description: "弱い着氷性の雨", icon: "13d" },
-  67: { description: "強い着氷性の雨", icon: "13d" },
-  71: { description: "弱い雪", icon: "13d" },
-  73: { description: "雪", icon: "13d" },
-  75: { description: "強い雪", icon: "13d" },
-  77: { description: "霧雪", icon: "13d" },
-  80: { description: "弱いにわか雨", icon: "09d" },
-  81: { description: "にわか雨", icon: "09d" },
-  82: { description: "激しいにわか雨", icon: "09d" },
-  85: { description: "弱いにわか雪", icon: "13d" },
-  86: { description: "強いにわか雪", icon: "13d" },
-  95: { description: "雷雨", icon: "11d" },
-  96: { description: "雷雨（弱い雹）", icon: "11d" },
-  99: { description: "雷雨（強い雹）", icon: "11d" },
+  0: { description: "快晴", icon: "Sun" },
+  1: { description: "晴れ", icon: "Sun" },
+  2: { description: "一部曇り", icon: "CloudSun" },
+  3: { description: "曇り", icon: "Cloud" },
+  45: { description: "霧", icon: "CloudFog" },
+  48: { description: "霧氷", icon: "CloudFog" },
+  51: { description: "弱い霧雨", icon: "CloudDrizzle" },
+  53: { description: "霧雨", icon: "CloudDrizzle" },
+  55: { description: "強い霧雨", icon: "CloudDrizzle" },
+  56: { description: "弱い着氷性霧雨", icon: "CloudDrizzle" },
+  57: { description: "強い着氷性霧雨", icon: "CloudDrizzle" },
+  61: { description: "弱い雨", icon: "CloudRain" },
+  63: { description: "雨", icon: "CloudRain" },
+  65: { description: "強い雨", icon: "CloudRain" },
+  66: { description: "弱い着氷性の雨", icon: "CloudSnow" },
+  67: { description: "強い着氷性の雨", icon: "CloudSnow" },
+  71: { description: "弱い雪", icon: "Snowflake" },
+  73: { description: "雪", icon: "Snowflake" },
+  75: { description: "強い雪", icon: "Snowflake" },
+  77: { description: "霧雪", icon: "Snowflake" },
+  80: { description: "弱いにわか雨", icon: "CloudRain" },
+  81: { description: "にわか雨", icon: "CloudRain" },
+  82: { description: "激しいにわか雨", icon: "CloudRain" },
+  85: { description: "弱いにわか雪", icon: "CloudSnow" },
+  86: { description: "強いにわか雪", icon: "CloudSnow" },
+  95: { description: "雷雨", icon: "CloudLightning" },
+  96: { description: "雷雨（弱い雹）", icon: "CloudLightning" },
+  99: { description: "雷雨（強い雹）", icon: "CloudLightning" },
 };
 
 /**
@@ -64,7 +65,7 @@ export class WeatherApiError extends Error implements WeatherError {
  * WMO Weather Codeから天気情報を取得
  */
 function getWeatherInfo(code: number): WeatherCodeInfo {
-  return WMO_WEATHER_CODES[code] || { description: "不明", icon: "01d" };
+  return WMO_WEATHER_CODES[code] || { description: "不明", icon: "Sun" };
 }
 
 /**
