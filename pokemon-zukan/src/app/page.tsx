@@ -13,17 +13,12 @@ export default async function HomePage({ searchParams }: Props) {
   const { pokemons, pagination } = await getPokemonList(page);
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-        ポケモン図鑑
-      </h1>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <main className='container mx-auto px-4 py-8'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
         {pokemons.map((pokemon) => (
           <PokemonCard key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
-
       <Pagination pagination={pagination} />
     </main>
   );

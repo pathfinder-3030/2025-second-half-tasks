@@ -20,13 +20,13 @@ export function StatBar({ stat }: Props) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="w-20 text-sm text-gray-600 dark:text-gray-400">
+      <span className="w-20 text-sm text-gray-600">
         {stat.japaneseName}
       </span>
-      <span className="w-10 text-sm font-medium text-right text-gray-900 dark:text-white">
+      <span className="w-10 text-sm font-medium text-right text-gray-900">
         {stat.value}
       </span>
-      <div className="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
         <div
           className={`h-full ${getBarColor(stat.value)} transition-all duration-300`}
           style={{ width: `${percentage}%` }}

@@ -38,9 +38,9 @@ export default async function PokemonDetailPage({ params }: Props) {
         ← 一覧に戻る
       </Link>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="flex flex-col items-center mb-6">
-          <div className="relative w-48 h-48 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+          <div className="relative w-48 h-48 bg-gray-100 rounded-full mb-4">
             <Image
               src={pokemon.imageUrl}
               alt={pokemon.japaneseName}
@@ -50,11 +50,11 @@ export default async function PokemonDetailPage({ params }: Props) {
               priority
             />
           </div>
-          <p className="text-gray-500 dark:text-gray-400 text-lg">#{paddedId}</p>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <p className="text-gray-500 text-lg">#{paddedId}</p>
+          <h1 className="text-3xl font-bold text-gray-900">
             {pokemon.japaneseName}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 capitalize">
+          <p className="text-gray-500 capitalize">
             {pokemon.name}
           </p>
           <div className="flex gap-2 mt-3">
@@ -65,19 +65,19 @@ export default async function PokemonDetailPage({ params }: Props) {
         </div>
 
         <section className="mb-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+          <h2 className="text-xl font-bold text-gray-900 mb-3">
             基本情報
           </h2>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400">高さ</p>
-              <p className="text-lg font-medium text-gray-900 dark:text-white">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <p className="text-sm text-gray-500">高さ</p>
+              <p className="text-lg font-medium text-gray-900">
                 {pokemon.height} m
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400">重さ</p>
-              <p className="text-lg font-medium text-gray-900 dark:text-white">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <p className="text-sm text-gray-500">重さ</p>
+              <p className="text-lg font-medium text-gray-900">
                 {pokemon.weight} kg
               </p>
             </div>
@@ -85,7 +85,7 @@ export default async function PokemonDetailPage({ params }: Props) {
         </section>
 
         <section>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+          <h2 className="text-xl font-bold text-gray-900 mb-3">
             ステータス
           </h2>
           <div className="space-y-3">
